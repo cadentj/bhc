@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/bhc/static/css/main.d366c7bb.css",
+    "main.js": "/bhc/static/js/main.500ee4bd.js",
+    "static/js/787.3b5620ce.chunk.js": "/bhc/static/js/787.3b5620ce.chunk.js",
+    "index.html": "/bhc/index.html",
+    "main.d366c7bb.css.map": "/bhc/static/css/main.d366c7bb.css.map",
+    "main.500ee4bd.js.map": "/bhc/static/js/main.500ee4bd.js.map",
+    "787.3b5620ce.chunk.js.map": "/bhc/static/js/787.3b5620ce.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d366c7bb.css",
+    "static/js/main.500ee4bd.js"
+  ]
+}
