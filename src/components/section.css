@@ -12,16 +12,34 @@
     justify-content: center;
 }
 
+.top-section {
+    /* Replace with your font choice */
+    color: #333;
+    /* This is a standard dark grey, adjust as needed */
+    max-width: 45vw;
 
+    
+    display: flex;
+    flex-direction: column;
+    /* Vertically align content */
+    justify-content: center;
+}
+
+
+
+.top-section p {
+    font-size: 17px;
+    /* Adjust as needed */
+    line-height: 1.6;
+}
 
 .budget-section p {
     font-size: 17px;
     /* Adjust as needed */
     line-height: 1.6;
     /* Adjust for readability */
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
-
 
 
 .budget-section a {
@@ -30,7 +48,7 @@
     color: #000;
     font-size: 17px;
     /* Standard link color, adjust as needed */
-    margin: 10px;
+    margin-top: 10px;
     /* Space between links */
     text-decoration: underline;
     /* Removes underline from links */

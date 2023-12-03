@@ -24,9 +24,9 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
 
 
     const positionRadius = {
-      1: radius * 0.50, // Close
+      1: radius * 0.55, // Close
       2: radius * 0.55, // Middle
-      3: radius * 0.65// Far
+      3: radius * 0.55// Far
     };
     const nodes = dendrogram.descendants().map((node) => {
 
@@ -61,15 +61,6 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
       const y = adjustedEndRadius * Math.sin(angleRadians);
 
 
-
-
-      // Rest of the existing code...
-
-
-      // Rest of the existing code...
-
-
-
       return (
         <g
           key={node.id}
@@ -89,7 +80,7 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
           {isBossNode && <circle
             cx={0}
             cy={0}
-            r={30}
+            r={35}
             stroke="transparent"
             fill={"white"}
             style={{
@@ -98,9 +89,9 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
           />}
           {/* Always render the label, but differentiate the boss node */}
           <text
-            x={isBossNode ? 16 : (turnLabelUpsideDown ? -10 : 10)}
-            y={isBossNode ? 15 : 0}
-            fontSize={isBossNode ? "20px" : "12px"} // Bigger font size for boss node
+            x={isBossNode ? 22 : (turnLabelUpsideDown ? -10 : 10)}
+            y={isBossNode ? 10 : 0}
+            fontSize={isBossNode ? "26px" : "18px"} // Bigger font size for boss node
             textAnchor={turnLabelUpsideDown ? "end" : "start"}
             alignmentBaseline="middle"
             fill={isBossNode ? color : color}
@@ -152,20 +143,10 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
           // Calculate x and y, flipping the sign for right and bottom
           const endX = adjustedEndRadius * Math.cos(angleRadians);
           const endY = adjustedEndRadius * Math.sin(angleRadians);
-
-          // // Calculate midpoint
-          // const midX = (startX + endX) / 2;
-          // const midY = (startY + endY) / 2;
-
-
-      
-
-          var min = 20;
-          var max = 50;
-          var randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
           
-          const midX = (startX + adjustedEndRadius * Math.cos(angleRadians)) / 2 + randomNumber;
-          const midY = (startY + adjustedEndRadius * Math.sin(angleRadians)) / 2 + randomNumber;
+          // Get spline bendpoint
+          const midX = (startX + adjustedEndRadius * Math.cos(angleRadians)) / 2 + node.data.offset;
+          const midY = (startY + adjustedEndRadius * Math.sin(angleRadians)) / 2 + node.data.offset;
 
 
 
@@ -183,11 +164,6 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
       .curve(d3.curveBundle.beta(0.9)); // Adjust the curvature
 
     const edges = bendPoints.map((bp, i) => {
-      // const pathData = [
-      //   { x: bp.startX, y: bp.startY },
-      //   { x: bp.midX, y: bp.midY },
-      //   { x: bp.endX, y: bp.endY }
-      // ];
       const pathData = [
         { x: bp.startX, y: bp.startY },
         { x: bp.midX, y: bp.midY },
@@ -252,7 +228,7 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
       });
 
     // nodeSelection.select("circle").transition().style("opacity", 1).style("fill", color).attr("r", 10);
-    nodeSelection.select("text").transition().style("opacity", 1).style("fill", color).style("font-size", "16px"); // Ensure labels are visible
+    nodeSelection.select("text").transition().style("opacity", 1).style("fill", color).style("font-size", "18px"); // Ensure labels are visible
   };
 
 

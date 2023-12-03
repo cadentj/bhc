@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 // import Overlay from './Components/Overlay';
 
 import Cover from './pages/Cover.js';
+import Final from './pages/Final.js';
 import PreparationPage from './pages/PreparationPage.js';
 import ExplorationPage from './pages/ExplorationPage.js';
 import InitiationPage from './pages/InitiationPage.js';
@@ -48,6 +49,7 @@ const MainLayoutRoutes = () => {
         <Route path="/exploration" element={<ExplorationPage />} />
         <Route path="/initiation" element={<InitiationPage />} />
         <Route path="/finalization" element={<FinalizationPage />} />
+        <Route path="/final" element={<Final />} />
       </Routes>
     </div>
   );

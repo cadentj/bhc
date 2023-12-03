@@ -11,11 +11,14 @@ export default function Contents({ title, description, resources, barriers, colo
                 {description}
             </p>
             {resources !== "None" &&
-                <div>
-                    {resources.map((link, index) => (
-                        <a key={index} href={link}>Link {index}</a>
-                    ))}
-                </div>
+                <>
+                    <Typography variant='h5'>Resources</Typography>
+                    <Box>
+                        {resources.map((link, index) => (
+                            <a key={index} href={link}>Link {index}</a>
+                        ))}
+                    </Box>
+                </>
             }
             {barriers !== "None" &&
                 <Box sx={{
@@ -24,6 +27,7 @@ export default function Contents({ title, description, resources, barriers, colo
                     borderRadius: 5,
                     paddingX: 3,
                     paddingY: 2,
+                    marginTop: (resources === "None") ? 0 : 3,
                 }}>
                     {barriers}
                 </Box>

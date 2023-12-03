@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import Dendrogram from './Dendro.js';
 import ProgressBar from './ProgressBar.js';
@@ -7,9 +7,14 @@ import Contents from './Contents.js';
 import { useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 
+import CircleIcon from '@mui/icons-material/Circle';
+
 import "./section.css"
 
 // New function to transform your specific data format into a hierarchical structure
+
+
+
 function transformData(inputData) {
   const root = {
     type: 'node',
@@ -17,12 +22,12 @@ function transformData(inputData) {
     children: []
   };
 
-  var min = -50;
-  var max = 50;
-  var randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-  
 
   inputData.forEach(item => {
+    var min = -30;
+    var max = 30;
+    const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
     root.children.push({
       type: 'leaf',
       name: item.name,
@@ -40,25 +45,37 @@ function extractSections(preparation) {
   const sectionMap = new Map();
   const sections = [];
 
-  preparation.forEach(item => {
+  let ind = 0
+  preparation.forEach((item) => {
     const sectionId = item.section;
     if (!sectionMap.has(sectionId)) {
       sectionMap.set(sectionId, true);
-      sections.push({ id: sectionId, name: sectionId });
+      sections.push({ id: sectionId, name: sectionId, ind: ind });
     }
   });
 
   return sections;
 }
 
-export default function BasicGrid({ data, contents, color, sectionDescription, title }) {
-  const transformedData = transformData(data);
+function extractIndexs(finalizationArray) {
+  const result = {};
+  finalizationArray.forEach(item => {
+    if (!result[item.section]) {
+      result[item.section] = item.Position;
+    }
+  });
+  result["start"] = 0
+  return result;
+}
 
+
+export default function BasicGrid({ data, contents, color, sectionDescription, title }) {
+  const transformedData = useMemo(() => transformData(data), [data]);
 
   const sections = extractSections(data);
 
 
-  const graphWidth = window.innerWidth / 2.2;
+  const graphWidth = window.innerWidth / 1.8;
   const dendrogramRef = useRef();
 
   const [activeSection, setActiveSection] = useState("start");
@@ -69,7 +86,8 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
 
     const handleScroll = () => {
       let activeSectionId = null;
-      sections.forEach(section => {
+
+      sections.forEach((section) => {
         const sectionElement = document.getElementById(section.id);
         const { top, bottom } = sectionElement.getBoundingClientRect();
 
@@ -83,10 +101,10 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
         setPreviousSection(activeSection);
         setActiveSection(activeSectionId);
 
+        console.log(activeSectionId)
+
         // Call revealNodes for the new active section
         dendrogramRef.current.revealNodes(activeSectionId);
-
-
       }
     };
 
@@ -110,11 +128,21 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
     } else if (location === "/initiation") {
       navigate('/finalization')
     } else if (location === "/finalization") {
-      navigate('/exploration')
+      navigate('/final')
     }
   };
 
-  const sectionNames = ["Preparation", "Exploration", "Application", "Closing"];
+  const test = extractIndexs(data)
+
+  let height = window.innerHeight;
+
+  const overlayStyle = {
+    position: 'absolute',
+    zIndex: 20
+  }
+  const imageLocation = `${location}/${test[activeSection]}.png`
+
+  console.log(activeSection)
 
   // iterate through contents dict and make an array of contents[i].section
   const progressSections = contents.map(({ section }) => { return { id: section, name: section } })
@@ -122,12 +150,15 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
 
   return (
     <Box className="page">
+      <div style={{ ...overlayStyle, ...{ top: 20, left: 25, fontSize: '13px', position: "fixed", display: "flex", alignItems: "center" } }} id="fade-in">
+        <Box component="img" sx={{ height: 40 }} src={imageLocation} /><Typography pl={2} color={color} variant="h4">{title}</Typography>
+      </div>
 
       <Box className="page" sx={{ position: "absolute", zIndex: 50, background: "white" }} id="fade-overlay" />
 
       <Box className="centered-flex" sx={{ width: "50%", height: "100%", position: "fixed" }}>
-        <Box sx={{ pr: 10, pb: 20 }}>
-          <Dendrogram ref={dendrogramRef} data={transformedData} width={graphWidth} color={color} height={graphWidth*2} initialSection={contents[0].section} />
+        <Box sx={{ pr: 5, pb: 25 }}>
+          <Dendrogram ref={dendrogramRef} data={transformedData} width={graphWidth} color={color} height={graphWidth * 1.5} initialSection={contents[0].section} />
         </Box>
       </Box>
 
@@ -136,7 +167,7 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
       <Box className="container-snap" sx={{ width: "50%", height: "100vh", right: 0, position: "absolute" }}>
         <Box
           key={-1}
-          className="section budget-section"
+          className="section top-section"
           sx={{
             width: '35vw',
             height: '100vh',
@@ -149,12 +180,12 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
           <p>
             {sectionDescription}
           </p>
-          <Typography variant='h5' mb={1} >Contents</Typography>
-          {sectionNames.map((section, index) => (
-            <Stack direction={"row"} alignItems={"center"}>
-              <Box sx={{ width: 15, height: 15, bgcolor: color, borderRadius: "50%", mr: 1 }}></Box>
-              <Typography>{section}</Typography>
-            </Stack>
+          <Typography variant='h5' mb={2} fontWeight={600}>Contents</Typography>
+          {sections.map((section, index) => (
+            <Box key={section["id"]} sx={{ display: "flex", alignItems: "center", cursor: "pointer", zIndex: 10, mb: "10px" }}>
+              <CircleIcon sx={{ color: color, fontSize: 15, pr: 1 }} />
+              <Typography marginBottom={0}>{section["id"]}</Typography>
+            </Box>
           ))}
         </Box>
         {contents.map(({ section, description, resources, barriers }, index) => (
@@ -170,16 +201,16 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
             id={section}
           >
 
-            <Contents title={section} description={description} barriers={barriers} resources={resources} color={color}/>
+            <Contents title={section} description={description} barriers={barriers} resources={resources} color={color} />
 
             {(index === sections.length - 1) && <Box sx={{ width: "100%", mt: 10, display: "flex", justifyContent: "center" }} >
-              <Button variant="outlined" color={location.slice(1)} onClick={nextPage}>Next</Button>
+              <Button variant="outlined" size='large' color={location.slice(1)} onClick={nextPage}>Next</Button>
             </Box>}
 
           </Box>
         ))}
 
       </Box>
-    </Box>
+    </Box >
   );
 }

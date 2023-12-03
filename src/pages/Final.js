@@ -40,7 +40,7 @@ const FadeInComponent = ({ children }) => {
     return <a.div style={fadeIn}>{children}</a.div>;
 };
 
-export default function App() {
+export default function Final() {
     const [open] = useState(true)
     const [visible, setVisible] = useState(false)
 
@@ -82,43 +82,32 @@ export default function App() {
             <div className={"centered-flex page"} onClick={() => openPage("/narrative")} >
                 <Box sx={{ width: "50%" }}>
                     <TitleTrail open={open}>
-                        <Typography variant='h1' color="black">YOUR</Typography>
-                        <Typography variant='h1' color="black">HOMEBUYING</Typography>
-                        <Typography variant='h1' color="black">JOURNEY</Typography>
+                        <Typography variant='h1' color="black">CONGRATULATIONS</Typography>
+                        <Typography variant='h1' color="black">HOMEONWER</Typography>
                     </TitleTrail>
-                    <FadeInComponent>
-                        <Button
-                            variant="outlined"
-                            size="large"
-                            sx={{
-                                color: 'black',
-                                borderColor: 'black',
-                                borderWidth: 2, // Increase the border width for a thicker border
-                                fontSize: '1rem', // Increase font size for larger text
-                                padding: '10px 24px', // Increase padding for a larger button
-                                '&:hover': {
-                                    borderColor: 'black', // Ensure the border color stays black on hover
-                                    borderWidth: 2 // Ensure the border width stays thick on hover
-                                }
-                            }}
-                        >
-                            CLICK TO BEGIN
-                        </Button>
+                    <FadeInComponent variant="h6">
+                        <Box sx={{width: "30vw"}}>
+                            <Typography>
+                                You did it! Bravo on completing the guide, your dedication to understanding each step of the process has equipped you with the knowledge needed to navigate the exciting journey ahead.
+                                <br /><br />
+                                If you have additional questions please reach out to the Boston Home Center.
+                                <br /><br />
+                                Good luck!
+                            </Typography>
+                        </Box>
                     </FadeInComponent>
                 </Box>
-
-                <Box sx={{ width: "50%", display: "flex", flexDirection: "column", alignItems: "flex-end", pr: 4, mt: -19.5 }}>
+                <Box sx={{ width: "50%", display: "flex", flexDirection: "column", alignItems: "flex-end", pr: 4, mt: -19 }}>
                     <Box
                         sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}
                     >
-                        <FadeInComponent>
-                            {sectionNames.map((section, index) => (
-                                <Box key={section} sx={{ display: "flex", alignItems: "center", mb: 2, cursor: "pointer", zIndex: 10 }} onClick={() => navigateToSection(section.toLowerCase())}>
-                                    <ArrowForwardIcon sx={{ color: colors[index], fontSize: 25 }} />
-                                    <Typography> {section}</Typography>
-                                </Box>
-                            ))}
-                        </FadeInComponent>
+
+                        {sectionNames.map((section, index) => (
+                            <Box key={section} sx={{ display: "flex", alignItems: "center", mb: 2, cursor: "pointer", zIndex: 10 }} onClick={() => navigateToSection(section.toLowerCase())}>
+                                <ArrowForwardIcon sx={{ color: colors[index], fontSize: 25 }} />
+                                <Typography> {section}</Typography>
+                            </Box>
+                        ))}
                     </Box>
 
                 </Box>
