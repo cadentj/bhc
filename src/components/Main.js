@@ -140,7 +140,7 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
     position: 'absolute',
     zIndex: 20
   }
-  const imageLocation = `${location}/${test[activeSection]}.png`
+  const imageLocation = require(`../media${location}/${test[activeSection]}.png`)
 
   console.log(activeSection)
 
