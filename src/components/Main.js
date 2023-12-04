@@ -14,19 +14,58 @@ import "./section.css"
 // New function to transform your specific data format into a hierarchical structure
 
 
+const orderDict = {
+  "/preparation": {
+    "start" : 0,
+    "Wants & Needs": 1,
+    "Homebuying Education": 2,
+    "Create Your Budget": 3,
+    "Build Your Credit": 4,
+    "Gather Documents": 5
+  },
+  "/exploration": {
+    "start" : 0,
+    "Build Your Team": 1,
+    "Pre-Approval": 2,
+    "Begin Your Search": 3,
+    "Choose Your Home": 4
+  },
+  "/initiation": {
+    "start" : 0,
+    "Make An Offer": 1,
+    "Home Inspection": 2,
+    "Purchase & Sale Agreement": 3,
+    "Apply for a Mortgage": 4
+  },
+  "/finalization" : {
+    "start" : 0,
+    "Shop for Home Insurance": 1,
+    "Final Walkthrough": 2,
+    "Closing": 3
+  }
+}
+
 
 function transformData(inputData) {
+  shuffleArray(inputData)
+
   const root = {
     type: 'node',
     name: 'You',
     children: []
   };
 
-
-  inputData.forEach(item => {
-    var min = -30;
-    var max = 30;
+  // Using a for loop instead of forEach
+  for (let i = 0; i < inputData.length; i++) {
+    const item = inputData[i];
+    var min = -20;
+    var max = 20;
     const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    // Skip the current iteration if the name is a single space
+    if (item.name === " ") {
+      continue;
+    }
 
     root.children.push({
       type: 'leaf',
@@ -36,36 +75,48 @@ function transformData(inputData) {
       links: ['Root'],
       offset: randomNumber
     });
-  });
+  }
 
   return root;
 }
 
-function extractSections(preparation) {
+
+function extractSections(initiation) {
   const sectionMap = new Map();
   const sections = [];
 
-  let ind = 0
-  preparation.forEach((item) => {
-    const sectionId = item.section;
-    if (!sectionMap.has(sectionId)) {
-      sectionMap.set(sectionId, true);
-      sections.push({ id: sectionId, name: sectionId, ind: ind });
-    }
+  initiation.forEach((item) => {
+    item.section.forEach((sectionId) => {
+      if (!sectionMap.has(sectionId)) {
+        sectionMap.set(sectionId, true);
+        sections.push({ id: sectionId, name: sectionId });
+      }
+    });
   });
 
   return sections;
 }
 
-function extractIndexs(finalizationArray) {
+function extractIndexes(initiation) {
+  var counter = 0;
   const result = {};
-  finalizationArray.forEach(item => {
-    if (!result[item.section]) {
-      result[item.section] = item.Position;
-    }
+  initiation.forEach(item => {
+    item.section.forEach(sectionName => {
+      if (!result[sectionName]) {
+        result[sectionName] = counter;
+        counter++;
+      }
+    });
   });
-  result["start"] = 0
+  result["start"] = 0;
   return result;
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
 
 
@@ -101,7 +152,6 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
         setPreviousSection(activeSection);
         setActiveSection(activeSectionId);
 
-        console.log(activeSectionId)
 
         // Call revealNodes for the new active section
         dendrogramRef.current.revealNodes(activeSectionId);
@@ -132,7 +182,9 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
     }
   };
 
-  const test = extractIndexs(data)
+  const test = extractIndexes(data)
+
+  console.log(test)
 
   let height = window.innerHeight;
 
@@ -140,9 +192,9 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
     position: 'absolute',
     zIndex: 20
   }
-  const imageLocation = require(`../media${location}/${test[activeSection]}.png`)
+  const imageLocation = require(`../media${location}/${orderDict[location][activeSection]}.png`)
 
-  console.log(activeSection)
+  // console.log(activeSection)
 
   // iterate through contents dict and make an array of contents[i].section
   const progressSections = contents.map(({ section }) => { return { id: section, name: section } })
@@ -156,10 +208,9 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
 
       <Box className="page" sx={{ position: "absolute", zIndex: 50, background: "white" }} id="fade-overlay" />
 
-      <Box className="centered-flex" sx={{ width: "50%", height: "100%", position: "fixed" }}>
-        <Box sx={{ pr: 5, pb: 25 }}>
-          <Dendrogram ref={dendrogramRef} data={transformedData} width={graphWidth} color={color} height={graphWidth * 1.5} initialSection={contents[0].section} />
-        </Box>
+      <Box className="centered-flex" sx={{ width: "50%", height: "100%", position: "fixed", pr: 5 }}>
+        <Dendrogram ref={dendrogramRef} data={transformedData} width={graphWidth} color={color} height={graphWidth * 1.5} initialSection={contents[0].section} />
+
       </Box>
 
       <ProgressBar sections={progressSections} activeSection={activeSection} />
@@ -204,7 +255,7 @@ export default function BasicGrid({ data, contents, color, sectionDescription, t
             <Contents title={section} description={description} barriers={barriers} resources={resources} color={color} />
 
             {(index === sections.length - 1) && <Box sx={{ width: "100%", mt: 10, display: "flex", justifyContent: "center" }} >
-              <Button variant="outlined" size='large' color={location.slice(1)} onClick={nextPage}>Next</Button>
+              <Button variant="outlined" size='large' color={location.slice(1)} onClick={nextPage}>{(location === "/finalization") ? "Finish" : "Next"}</Button>
             </Box>}
 
           </Box>

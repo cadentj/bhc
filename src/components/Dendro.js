@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import * as d3 from "d3";
+import { Box } from "@mui/material";
 
 const MARGIN = 150;
 
@@ -84,18 +85,18 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
             stroke="transparent"
             fill={"white"}
             style={{
-              opacity: (isBossNode || node.data.section === initialSection) ? 1 : 0
+              opacity: (isBossNode || node.data.section.includes(initialSection)) ? 1 : 0
             }}
           />}
           {/* Always render the label, but differentiate the boss node */}
           <text
             x={isBossNode ? 22 : (turnLabelUpsideDown ? -10 : 10)}
             y={isBossNode ? 10 : 0}
-            fontSize={isBossNode ? "26px" : "18px"} // Bigger font size for boss node
+            fontSize={isBossNode ? "26px" : "12px"} // Bigger font size for boss node
             textAnchor={turnLabelUpsideDown ? "end" : "start"}
             alignmentBaseline="middle"
-            fill={isBossNode ? color : color}
-            style={{ opacity: (isBossNode || node.data.section === initialSection) ? 1 : 0, fontWeight: isBossNode ? "bold" : "normal" }}
+            fill={isBossNode ? color : "gray"}
+            style={{ opacity: (isBossNode || node.data.section.includes(initialSection)) ? 1 : 0, fontWeight: isBossNode ? "bold" : "normal" }}
           >
             {node.data.name}
           </text>
@@ -135,7 +136,7 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
           } else if (isTop || isBottom) {
             adjustedEndRadius *= 1.7; // Increase radius for top and bottom
           }
-          
+
           const startX = parentNode.y * Math.cos((parentNode.x - 90) * (Math.PI / 180));
           const startY = parentNode.y * Math.sin((parentNode.x - 90) * (Math.PI / 180));
 
@@ -143,10 +144,10 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
           // Calculate x and y, flipping the sign for right and bottom
           const endX = adjustedEndRadius * Math.cos(angleRadians);
           const endY = adjustedEndRadius * Math.sin(angleRadians);
-          
+
           // Get spline bendpoint
-          const midX = (startX + adjustedEndRadius * Math.cos(angleRadians)) / 2 + node.data.offset;
-          const midY = (startY + adjustedEndRadius * Math.sin(angleRadians)) / 2 + node.data.offset;
+          const midX = (startX + adjustedEndRadius * Math.cos(angleRadians)) / 2 + ((isTop || isBottom) ? node.data.offset * 3 : node.data.offset );
+          const midY = (startY + adjustedEndRadius * Math.sin(angleRadians)) / 2 + node.data.offset /2;
 
 
 
@@ -170,7 +171,10 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
         { x: bp.endX, y: bp.endY }
       ];
 
-      const isEdgeRevealed = revealedSections.has(bp.node.data.section) || revealedSections.has(bp.parentNode.data.section);
+      // const isEdgeRevealed = bp.node.data.section.some(section => revealedSections.has(section)) || bp.parentNode.data.section.includes(initialSection);
+      // const isEdgeRevealed = revealedSections.has(bp.node.data.section) || revealedSections.has(bp.parentNode.data.section);
+      const isEdgeRevealed = (bp.node.data.section && bp.node.data.section.some(section => revealedSections.has(section))) || 
+      (bp.parentNode.data.section && bp.parentNode.data.section.includes(initialSection));
 
       return (
         <path
@@ -198,12 +202,13 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
   const revealNodes = (sectionName) => {
     // Update revealed sections
     setRevealedSections(prev => new Set([...prev, sectionName]));
-
+  
     // Select and style nodes of previously revealed sections
     d3.select(nodesRef.current).selectAll("g")
       .filter(function () {
         const nodeData = JSON.parse(this.getAttribute('data-node'));
-        return revealedSections.has(nodeData.section) && nodeData.section !== sectionName;
+        // Safely check if section is defined and includes any of the revealed sections
+        return nodeData.section && nodeData.section.some(section => revealedSections.has(section)) && !nodeData.section.includes(sectionName);
       })
       .each(function () {
         // Transition for text
@@ -211,25 +216,18 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
           .transition()
           .style("fill", "grey")
           .style("font-size", "12px");
-
-        // Transition for circle (if you have specific styles for circles)
-        // d3.select(this).select("circle")
-        //   .transition()
-        //   .style("fill", "grey") // Replace with your desired style
-        //   .attr("r", "5"); // Replace with your desired radius
       });
-
 
     // Reveal nodes of the current section
     const nodeSelection = d3.select(nodesRef.current).selectAll("g")
-      .filter(function () {
-        const nodeData = JSON.parse(this.getAttribute('data-node'));
-        return nodeData.section === sectionName;
-      });
-
-    // nodeSelection.select("circle").transition().style("opacity", 1).style("fill", color).attr("r", 10);
+    .filter(function () {
+      const nodeData = JSON.parse(this.getAttribute('data-node'));
+      // Safely check if section is defined and includes the current section
+      return nodeData.section && nodeData.section.includes(sectionName);
+    });
     nodeSelection.select("text").transition().style("opacity", 1).style("fill", color).style("font-size", "18px"); // Ensure labels are visible
   };
+
 
 
 
@@ -237,15 +235,16 @@ const Dendrogram = forwardRef(({ width, height, data, initialSection, color }, r
     revealNodes,
   }));
 
+  // console.log(window.innerWidth, window.innerHeight)
   return (
-    <div>
-      <svg width={width} height={height}>
-        <g transform={`translate(${width / 2 + MARGIN / 2}, ${height / 2 + MARGIN / 2})`}>
+    <Box>
+      <svg width={window.innerWidth/2 + 200} height={window.innerHeight * 1.85}>
+        <g transform={`translate(${width / 2 + 0 / 2}, ${height / 2 + 0 / 2})`}>
           <g ref={edgesRef}>{allEdges}</g>
           <g ref={nodesRef}>{allNodes}</g>
         </g>
       </svg>
-    </div>
+    </Box>
   );
 });
 

@@ -87,6 +87,9 @@ export default function App() {
                         <Typography variant='h1' color="black">JOURNEY</Typography>
                     </TitleTrail>
                     <FadeInComponent>
+                        <Box sx={{maxWidth:"25vw",mb: 4}}>
+                            <Typography variant='h5' color="black">Navigate the path to homeownership in Boston with our step-by-step guide</Typography>
+                        </Box>
                         <Button
                             variant="outlined"
                             size="large"
@@ -107,7 +110,7 @@ export default function App() {
                     </FadeInComponent>
                 </Box>
 
-                <Box sx={{ width: "50%", display: "flex", flexDirection: "column", alignItems: "flex-end", pr: 4, mt: -19.5 }}>
+                <Box sx={{ width: "50%", display: "flex", flexDirection: "column", alignItems: "flex-end", pr: 4, mt: -19}}>
                     <Box
                         sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}
                     >

@@ -15,7 +15,7 @@ export default function Contents({ title, description, resources, barriers, colo
                     <Typography variant='h5'>Resources</Typography>
                     <Box>
                         {resources.map((link, index) => (
-                            <a key={index} href={link}>Link {index}</a>
+                            <a key={index} href={link.url}>{link.name}</a>
                         ))}
                     </Box>
                 </>

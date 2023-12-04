@@ -4,24 +4,42 @@ const ExplorationContents = [
         "description": (
             <>
                 <p>
-                    Now that you've outlined your budget and home preferences, it's time to build your team, starting with a lender and a realtor or real estate agent. For a reliable lender, seek recommendations from family, friends, and the BHC, which provides a list of approved lenders. When selecting a real estate professional, consider referrals, conduct research on brokers or independent agents, and use resources like realtor.com to find licensed agents in your area.
+                    Now that you've outlined your budget and home preferences, it's time to build your team, starting with a lender and realtor (real estate agent), attorney, and inspector. For a reliable lender, seek recommendations from family, friends, and the BHC, which provides a list of approved lenders. When selecting a real estate professional, consider referrals, conduct research on brokers or independent agents, and use resources like realtor.com to find licensed agents in your area.
                 </p>
             </>
         ),
-        "resources": "None",
-        "barriers": "None"
+        "resources": [
+            {
+                name: "Licensed Realtor Database",
+                url: "https://www.realtor.com/thats-who-we-r/"
+            },
+            {
+                name: "Boston Home Center Lenders",
+                url: "https://www.boston.gov/departments/housing/meet-mortgage-lenders-we-work"
+            }
+        ],
+        "barriers": "Your team works for YOU, build relationships with people you trust will take you through journey reliably and professionally. "
     },
     {
         "section": "Pre-Approval",
         "description": (
             <>
                 <p>
-                    Establish your budget and obtain your credit report before initiating the search for a mortgage lender. After completing the preparation phase, assess a comfortable down payment and monthly mortgage payment, ensuring to choose a licensed lender—seek recommendations, consult the BHC, and utilize the NMLS database for verification.
+                    Once you've established your budget and *obtained your credit report*, it's time to embark on the search for a mortgage lender. It's crucial to undertake this step after completing the entire preparation phase, as it allows you to determine a comfortable down payment amount and understand the the amount of money per mortgage payment you can afford. Selecting the right lender is important, and verifying their licensing is essential.
                 </p>
             </>
         ),
-        "resources": ["https://www.realtor.com/thats-who-we-r/"],
-        "barriers": "None"
+        "resources": [
+            {
+                name: "NMLS Database",
+                url: "https://www.nmlsconsumeraccess.org/"
+            },
+            {
+                name: "Mortgage Payment Plan",
+                url: "https://extension.missouri.edu/gh5002"
+            }
+        ],
+        "barriers": "Your pre-approval is only be valid for 90 days, but you can get pre-approved by your lender if it expires."
     },
     {
         "section": "Begin Your Search",
@@ -32,7 +50,16 @@ const ExplorationContents = [
                 </p>
             </>
         ),
-        "resources": ["https://www.boston.gov/departments/housing/find-financial-help-owning-home", "https://www.mass.gov/info-details/one-mortgage-program"],
+        "resources": [
+            {
+                name: "Zillow",
+                url: "https://www.zillow.com/boston-ma/"
+            },
+            {
+                name: "Tips and Reminders for Buying a New Home",
+                url: "https://www.houselogic.com/buy/house-hunting/8-tips-finding-your-new-home/"
+            }
+        ],
         "barriers": "None"
     },
     {
@@ -40,12 +67,21 @@ const ExplorationContents = [
         "description": (
             <>
                 <p>
-                    Selecting your home is the fun part—tour houses with your agent, take notes, and make a pros and cons list. When you find the right one, discuss and submit an offer, but before finalizing, reassess your budget to include all closing costs and potential expenses like repairs and utilities. This ensures a smooth transition without financial surprises.
+                Selecting your home is the fun part—tour houses with your agent, take notes, and make a pros and cons list. When you find the right one, discuss and submit an offer, but before finalizing, reassess your budget to include all closing costs and potential expenses like repairs and utilities. This ensures a smooth transition without financial surprises.
                 </p>
             </>
         ),
-        "resources": ["https://www.realtor.com/thats-who-we-r/"],
-        "barriers": "None"
+        "resources": [
+            {
+                name: "Home Comparison Checklist",
+                url: "https://www.hud.gov/sites/documents/CHECKLIST-EN.PDF"
+            },
+            {
+                name: "Boston Home Center Financial Assistance",
+                url: "https://www.boston.gov/departments/housing/find-financial-help-owning-home"
+            }
+        ],
+        "barriers": "Keep in mind most mortgage programs require a downpayment of 3% of the purchase price, 1.5% with the Boston Home Center."
     },
 ];
 
